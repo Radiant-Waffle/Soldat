@@ -1,8 +1,10 @@
-package com.example.soldat;
+package com.example.soldat.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.soldat.R;
 
 public class MainActivity extends AppCompatActivity {
 
