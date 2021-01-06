@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Character implements Serializable {
 
-    private final int CreationPoints = 25;
-    private int RemainingCreationPoints;
+    private final int creationPoints = 25;
+    private int remainingCreationPoints;
+    private int experiencePoints;
     private int userId;
     private String characterName;
     private BodyType body;
@@ -15,19 +16,19 @@ public class Character implements Serializable {
 
     public Character(String userName) {
         this.characterName = userName;
-        this.RemainingCreationPoints = CreationPoints;
+        this.remainingCreationPoints = creationPoints;
     }
 
     public int getCreationPoints() {
-        return CreationPoints;
+        return creationPoints;
     }
 
     public int getRemainingCreationPoints() {
-        return RemainingCreationPoints;
+        return remainingCreationPoints;
     }
 
     public void changeRemainingCreationPoints(int remainingCreationPoints) {
-        RemainingCreationPoints += remainingCreationPoints;
+        this.remainingCreationPoints += remainingCreationPoints;
     }
 
     public int getUserId() {
