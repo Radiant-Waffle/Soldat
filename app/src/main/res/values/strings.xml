@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Soldat</string>
+    <string name="charSelect">Character Selection</string>
 </resources>

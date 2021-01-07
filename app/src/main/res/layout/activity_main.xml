@@ -11,13 +11,36 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="89dp"
-        android:orientation="horizontal"/>
+        android:layout_height="180dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/soldat_logo" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="81dp"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:lineSpacingExtra="8sp"
+            android:scaleType="centerInside"
+            android:text="@string/charSelect"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="36sp" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
