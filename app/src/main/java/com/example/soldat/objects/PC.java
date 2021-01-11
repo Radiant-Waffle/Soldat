@@ -1,22 +1,34 @@
 package com.example.soldat.objects;
 
+import android.widget.LinearLayout;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Character implements Serializable {
+public class PC implements Serializable {
 
+    private static int NEXT_ID = 1;
     private final int creationPoints = 25;
     private int remainingCreationPoints;
     private int experiencePoints;
     private int userId;
     private String characterName;
     private BodyType body;
-    private List<Skill> SkillList;
+    private ArrayList<Skill> SkillList;
 
 
-    public Character(String userName) {
+    public PC(String userName, BodyType body, ArrayList<Skill> skillList) {
         this.characterName = userName;
         this.remainingCreationPoints = creationPoints;
+        userId = NEXT_ID++;
+        this.body = body;
+        this.SkillList = skillList;
+    }
+    public PC(String userName) {
+        this.characterName = userName;
+        this.remainingCreationPoints = creationPoints;
+        userId = NEXT_ID++;
     }
 
     public int getCreationPoints() {
@@ -53,5 +65,13 @@ public class Character implements Serializable {
 
     public void setBody(BodyType body) {
         this.body = body;
+    }
+
+    public ArrayList<Skill> getSkillList() {
+        return SkillList;
+    }
+
+    public void addSkill(Skill newSkill) {
+        SkillList.add(newSkill);
     }
 }
