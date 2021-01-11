@@ -30,6 +30,10 @@ public class PC implements Serializable {
         this.remainingCreationPoints = creationPoints;
         userId = NEXT_ID++;
     }
+    public PC() {
+        this.remainingCreationPoints = creationPoints;
+        userId = NEXT_ID++;
+    }
 
     public int getCreationPoints() {
         return creationPoints;
