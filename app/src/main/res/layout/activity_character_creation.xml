@@ -83,14 +83,10 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
+    <worker8.com.github.radiogroupplus.RadioGroupPlus
+        android:id="@+id/aspect_selection"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TableLayout
-            android:id="@+id/aspect_selection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        android:layout_height="wrap_content" >
+    </worker8.com.github.radiogroupplus.RadioGroupPlus>
 
 </LinearLayout>
