@@ -1,0 +1,12 @@
+package com.example.soldat.enums;
+
+public enum modificationType {
+    PHYSICAL_BENEFITS,
+    PHYSICAL_DETRIMENTS,
+    SOCIAL_BENEFITS,
+    SOCIAL_DETRIMENTS,
+    MENTAL_BENEFITS,
+    MENTAL_DETRIMENTS,
+    TECHNOLOGICAL_BENEFITS,
+    TECHNOLOGICAL_DETRIMENTS
+}

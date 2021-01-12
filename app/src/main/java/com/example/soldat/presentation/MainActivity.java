@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 import com.example.soldat.R;
 import com.example.soldat.application.Services;
 import com.example.soldat.business.AccessPC;
-import com.example.soldat.objects.BodyType;
+import com.example.soldat.objects.Aspects.BodyType;
 import com.example.soldat.objects.PC;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadList() {
-        characterList = aPC.getPCList();
+        aPC.getPCList(characterList);
         for(PC person : characterList) {
             createNewRow(person.getCharacterName(), person.getBody());
         }
@@ -63,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 openCharacterCreationActivity();
             }
         });
+        newCharacter.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
         addButton.addView(newCharacter);
     }
 

@@ -1,13 +1,11 @@
-package com.example.soldat.objects;
+package com.example.soldat.objects.Aspects;
 
-public class Skill {
+public abstract class Aspects {
     String name;
     int cost;
     String description;
-
-    public Skill(String name, int cost, String description) {
+    public Aspects(String name, String description) {
         this.name = name;
-        this.cost = cost;
         this.description = description;
     }
 
@@ -17,14 +15,6 @@ public class Skill {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
     }
 
     public String getDescription() {

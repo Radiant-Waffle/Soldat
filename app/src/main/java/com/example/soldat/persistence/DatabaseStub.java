@@ -1,8 +1,11 @@
 package com.example.soldat.persistence;
 
-import com.example.soldat.objects.BodyType;
+import com.example.soldat.enums.modificationType;
+import com.example.soldat.objects.Aspects.Aspects;
+import com.example.soldat.objects.Aspects.BodyType;
+import com.example.soldat.objects.Aspects.Modification;
 import com.example.soldat.objects.PC;
-import com.example.soldat.objects.Skill;
+import com.example.soldat.objects.Aspects.Skill;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,8 +13,9 @@ import java.util.Arrays;
 public class DatabaseStub {
     private String dbName;
     private String dbType;
-    private ArrayList<BodyType> bodyOptions;
-    private ArrayList<Skill> skillOptions;
+    private ArrayList<Aspects> bodyOptions;
+    private ArrayList<Aspects> skillOptions;
+    private ArrayList<Aspects> modOptions;
     private ArrayList<PC> characterList;
 
     public DatabaseStub(String dbName) {
@@ -22,9 +26,11 @@ public class DatabaseStub {
     public void openDatabase() {
         bodyOptions = new ArrayList<>();
         skillOptions = new ArrayList<>();
+        modOptions = new ArrayList<>();
         characterList = new ArrayList<>();
         initializeBodyTypes();
         initializeSkills();
+        initializeMods();
         initializeCharacters();
     }
 
@@ -32,8 +38,11 @@ public class DatabaseStub {
         System.out.print("Closed " + dbType + " database: " + dbName);
     }
 
-    public ArrayList<BodyType> getBodyOptions() {
-        return bodyOptions;
+    public void getBodyOptions(ArrayList<Aspects> bType) {
+        if(bType != null) {
+            bType.clear();
+            bType.addAll(bodyOptions);
+        }
     }
 
     public void insertBodyType(BodyType currType) {
@@ -62,8 +71,11 @@ public class DatabaseStub {
         }
     }
 
-    public ArrayList<Skill> getSkillOptions() {
-        return skillOptions;
+    public void getSkillOptions(ArrayList<Aspects> skills) {
+        if(skills != null) {
+            skills.clear();
+            skills.addAll(skillOptions);
+        }
     }
 
     public void insertSkill(Skill currSkill) {
@@ -92,8 +104,44 @@ public class DatabaseStub {
         }
     }
 
-    public ArrayList<PC> getPCList() {
-        return characterList;
+    public void getModOptions(ArrayList<Aspects> mods) {
+        if(mods != null) {
+            mods.clear();
+            mods.addAll(modOptions);
+        }
+    }
+
+    public void insertMod(Modification currMod) {
+        if(currMod != null) {
+            modOptions.add(currMod);
+        }
+    }
+
+    public void updateMod(Modification currMod) {
+        if(currMod != null) {
+            int index = modOptions.indexOf(currMod);
+
+            if(index >= 0) {
+                modOptions.set(index, currMod);
+            }
+        }
+    }
+
+    public void deleteMod(Modification currMod) {
+        if(currMod != null) {
+            int index = modOptions.indexOf(currMod);
+
+            if(index >= 0) {
+                modOptions.remove(index);
+            }
+        }
+    }
+
+    public void getPCList(ArrayList<PC> pc) {
+        if(pc != null) {
+            pc.clear();
+            pc.addAll(characterList);
+        }
     }
 
     public void insertPC(PC currPC) {
@@ -144,11 +192,23 @@ public class DatabaseStub {
         skillOptions.add(melee);
     }
 
+    private void initializeMods() {
+        ArrayList<Integer> cost = new ArrayList<>(Arrays.asList(1));
+        Modification acuteBalance = new Modification("Acute Balance", cost, "stay upright", modificationType.PHYSICAL_BENEFITS);
+        cost = new ArrayList<>(Arrays.asList(-3));
+        Modification mute = new Modification("Mute", cost, "...", modificationType.PHYSICAL_DETRIMENTS);
+        cost = new ArrayList<>(Arrays.asList(2, 3, 4, 5, 6, 7));
+        Modification alternateIdentity  = new Modification("Alternate Identity", cost, "Whit a minute, who are you?", modificationType.SOCIAL_BENEFITS);
+        modOptions.add(acuteBalance);
+        modOptions.add(mute);
+        modOptions.add(alternateIdentity);
+    }
+
     private void initializeCharacters() {
-        ArrayList<Skill> skillList = new ArrayList<>();
+        ArrayList<Aspects> skillList = new ArrayList<>();
         skillList.add(skillOptions.get(1));
         skillList.add(skillOptions.get(2));
-        BodyType bType = bodyOptions.get(0);
+        BodyType bType = (BodyType)bodyOptions.get(0);
         PC bobbert = new PC("Bobbert", bType, skillList);
         characterList.add(bobbert);
     }

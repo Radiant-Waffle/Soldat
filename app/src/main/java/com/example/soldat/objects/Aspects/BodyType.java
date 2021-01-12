@@ -1,44 +1,35 @@
-package com.example.soldat.objects;
+package com.example.soldat.objects.Aspects;
 
 import java.util.ArrayList;
 
-public class BodyType {
-    String name;
+public class BodyType extends Aspects {
     int cost;
-    String description;
     boolean primary;
     boolean multiple = false;
     ArrayList<String> subOptions;
 
-    public BodyType(String name, int cost, String description, boolean primary) {
-        this.name = name;
+    public BodyType(String name, int cost, String description) {
+        super(name, description);
         this.cost = cost;
-        this.description = description;
+    }
+    public BodyType(String name, int cost, String description, boolean primary) {
+        super(name, description);
+        this.cost = cost;
         this.primary = primary;
     }
 
     public BodyType(String name, int cost, String description, ArrayList<String> subOptions, boolean primary) {
-        this.name = name;
+        super(name, description);
         this.cost = cost;
-        this.description = description;
         this.subOptions = subOptions;
         this.primary = primary;
     }
 
     public BodyType(String name, int cost, String description, boolean multiple, boolean primary) {
-        this.name = name;
+        super(name, description);
         this.cost = cost;
-        this.description = description;
         this.multiple = multiple;
         this.primary = primary;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getCost() {
@@ -47,14 +38,6 @@ public class BodyType {
 
     public void setCost(int cost) {
         this.cost = cost;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public ArrayList<String> getSubOptions() {

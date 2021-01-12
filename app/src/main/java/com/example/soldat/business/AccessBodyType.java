@@ -1,9 +1,8 @@
 package com.example.soldat.business;
 
-import android.provider.ContactsContract;
-
 import com.example.soldat.application.Services;
-import com.example.soldat.objects.BodyType;
+import com.example.soldat.objects.Aspects.Aspects;
+import com.example.soldat.objects.Aspects.BodyType;
 import com.example.soldat.persistence.DatabaseStub;
 
 import java.util.ArrayList;
@@ -12,8 +11,8 @@ public class AccessBodyType {
     private DatabaseStub db;
 
     public AccessBodyType() { db = Services.getDatabase(); }
-    public ArrayList<BodyType> getBodyOptions() {
-        return db.getBodyOptions();
+    public void getBodyOptions(ArrayList<Aspects> bType) {
+        db.getBodyOptions(bType);
     }
 
     public void insertBodyType(BodyType currType) {

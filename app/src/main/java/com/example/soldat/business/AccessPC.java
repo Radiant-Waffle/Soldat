@@ -2,7 +2,6 @@ package com.example.soldat.business;
 
 import com.example.soldat.application.Services;
 import com.example.soldat.objects.PC;
-import com.example.soldat.objects.Skill;
 import com.example.soldat.persistence.DatabaseStub;
 
 import java.util.ArrayList;
@@ -11,8 +10,8 @@ public class AccessPC {
     private DatabaseStub db;
 
     public AccessPC() { db = Services.getDatabase(); }
-    public ArrayList<PC> getPCList() {
-        return db.getPCList();
+    public void getPCList(ArrayList<PC> pc) {
+        db.getPCList(pc);
     }
 
     public void insertPC(PC currPC) {

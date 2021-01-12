@@ -1,10 +1,11 @@
 package com.example.soldat.objects;
 
-import android.widget.LinearLayout;
+import com.example.soldat.objects.Aspects.Aspects;
+import com.example.soldat.objects.Aspects.BodyType;
+import com.example.soldat.objects.Aspects.Skill;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PC implements Serializable {
 
@@ -15,10 +16,10 @@ public class PC implements Serializable {
     private int userId;
     private String characterName;
     private BodyType body;
-    private ArrayList<Skill> SkillList;
+    private ArrayList<Aspects> SkillList;
 
 
-    public PC(String userName, BodyType body, ArrayList<Skill> skillList) {
+    public PC(String userName, BodyType body, ArrayList<Aspects> skillList) {
         this.characterName = userName;
         this.remainingCreationPoints = creationPoints;
         userId = NEXT_ID++;
@@ -71,7 +72,7 @@ public class PC implements Serializable {
         this.body = body;
     }
 
-    public ArrayList<Skill> getSkillList() {
+    public ArrayList<Aspects> getSkillList() {
         return SkillList;
     }
 
