@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class BodyType extends Aspects {
     int cost;
     boolean primary;
-    boolean multiple = false;
+    int multiple = 1;
+    int multipleSelected = 1;
     ArrayList<String> subOptions;
 
     public BodyType(String name, int cost, String description) {
@@ -25,7 +26,7 @@ public class BodyType extends Aspects {
         this.primary = primary;
     }
 
-    public BodyType(String name, int cost, String description, boolean multiple, boolean primary) {
+    public BodyType(String name, int cost, String description, int multiple, boolean primary) {
         super(name, description);
         this.cost = cost;
         this.multiple = multiple;
@@ -48,12 +49,20 @@ public class BodyType extends Aspects {
         this.subOptions = subOptions;
     }
 
-    public boolean isMultiple() {
+    public int getMultiple() {
         return multiple;
     }
 
-    public void setMultiple(boolean multiple) {
+    public void setMultiple(int multiple) {
         this.multiple = multiple;
+    }
+
+    public int getMultipleSelected() {
+        return multipleSelected;
+    }
+
+    public void setMultipleSelected(int multipleSelected) {
+        this.multipleSelected = multipleSelected;
     }
 
     public boolean isPrimary() {

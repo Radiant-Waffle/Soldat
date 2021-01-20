@@ -6,7 +6,7 @@ public class Services {
     private static DatabaseStub soldatDatabase = null;
 
     public static DatabaseStub createDatabase(String dbName) {
-        if(soldatDatabase ==null) {
+        if (soldatDatabase == null) {
             soldatDatabase = new DatabaseStub(dbName);
             soldatDatabase.openDatabase();
         }
@@ -14,8 +14,8 @@ public class Services {
         return soldatDatabase;
     }
 
-    public static DatabaseStub getDatabase()        {
-        if (soldatDatabase == null)      {
+    public static DatabaseStub getDatabase() {
+        if (soldatDatabase == null) {
             System.out.println("No connection to database");
             System.exit(1);
         }
@@ -23,8 +23,8 @@ public class Services {
         return soldatDatabase;
     }
 
-    public static void closeDatabase()      {
-        if (soldatDatabase != null)      {
+    public static void closeDatabase() {
+        if (soldatDatabase != null) {
             soldatDatabase.closeDatabase();
         }
 

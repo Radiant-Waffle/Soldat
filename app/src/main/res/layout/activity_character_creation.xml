@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/secondaryColor"
     android:orientation="vertical"
+    tools:context=".presentation.MainActivity"
     tools:layout_editor_absoluteX="285dp"
-    tools:layout_editor_absoluteY="305dp"
-    tools:context=".presentation.MainActivity">
+    tools:layout_editor_absoluteY="305dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,7 +19,10 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/geo"
             android:text="@string/leftArrow"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/current_Step_Title"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,45 +33,57 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textSize="30sp"
-            app:layout_constraintStart_toEndOf="@+id/back_Button"
-            app:layout_constraintEnd_toStartOf="@+id/next_button"
+            android:fontFamily="@font/geo"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintEnd_toStartOf="@+id/next_button"
+            app:layout_constraintStart_toEndOf="@+id/back_Button"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/next_button"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/geo"
             android:text="Next"
-            app:layout_constraintStart_toEndOf="@+id/current_Step_Title"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/current_Step_Title"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/character_Name_Field"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/primaryTextColor"
+            app:boxBackgroundColor="@color/secondaryLightColor"
+            app:boxStrokeColor="@color/primaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/remaining_Points"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/remaining_Points">
+            app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/input_Character_Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:ems="10"
+                android:fontFamily="@font/geo"
                 android:hint="@string/charName"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textAlignment="center"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -75,18 +91,87 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textSize="18sp"
+            android:fontFamily="@font/geo"
             android:textAlignment="center"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/character_Name_Field"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <worker8.com.github.radiogroupplus.RadioGroupPlus
-        android:id="@+id/aspect_selection"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </worker8.com.github.radiogroupplus.RadioGroupPlus>
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:id="@+id/name_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:fontFamily="@font/geo"
+            android:text="Name"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cost_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:fontFamily="@font/geo"
+            android:text="Cost"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.357"
+            app:layout_constraintStart_toEndOf="@+id/name_header"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_options">
+
+            <TableLayout
+                android:id="@+id/aspect_table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </ScrollView>
+        <LinearLayout
+            android:id="@+id/bottom_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintHeight_max="200dp">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableLayout
+                    android:id="@+id/bottom_sheet_options"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/drawer_shape"
+                    tools:layout_editor_absoluteX="2dp">
+                </TableLayout>
+            </ScrollView>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

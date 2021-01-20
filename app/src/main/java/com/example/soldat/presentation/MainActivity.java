@@ -15,13 +15,13 @@ import com.example.soldat.R;
 import com.example.soldat.application.Services;
 import com.example.soldat.business.AccessPC;
 import com.example.soldat.objects.Aspects.BodyType;
-import com.example.soldat.objects.PC;
+import com.example.soldat.objects.PlayerCharacter;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ArrayList<PC> characterList;
+    private ArrayList<PlayerCharacter> characterList;
     private AccessPC aPC;
 
     private TableLayout tableLayout;
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         Services.createDatabase("soldatDB");
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         //variable initialization
@@ -49,12 +50,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void loadList() {
         aPC.getPCList(characterList);
-        for(PC person : characterList) {
+        for(PlayerCharacter person : characterList) {
             createNewRow(person.getCharacterName(), person.getBody());
         }
         final TableRow addButton = new TableRow(this);
         tableLayout.addView(addButton);
-        Button newCharacter = new Button(this);
+        Button newCharacter = findViewById(R.id.new_character);
         newCharacter.setText("+     New Character");
         newCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,9 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 openCharacterCreationActivity();
             }
         });
-        newCharacter.setLayoutParams(new TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-        addButton.addView(newCharacter);
     }
 
     private void createNewRow(String name, BodyType body) {
@@ -86,7 +84,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });*/
-        tableLayout.addView(newRow);
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        lp.height = 120;
+        lp.setMargins(10,10,10,10);
+        newRow.setLayoutParams(lp);
+        tableLayout.addView(newRow, lp);
     }
 
     private void openCharacterCreationActivity() {

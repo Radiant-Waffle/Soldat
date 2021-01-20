@@ -4,7 +4,7 @@ import com.example.soldat.enums.modificationType;
 import com.example.soldat.objects.Aspects.Aspects;
 import com.example.soldat.objects.Aspects.BodyType;
 import com.example.soldat.objects.Aspects.Modification;
-import com.example.soldat.objects.PC;
+import com.example.soldat.objects.PlayerCharacter;
 import com.example.soldat.objects.Aspects.Skill;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class DatabaseStub {
     private ArrayList<Aspects> bodyOptions;
     private ArrayList<Aspects> skillOptions;
     private ArrayList<Aspects> modOptions;
-    private ArrayList<PC> characterList;
+    private ArrayList<PlayerCharacter> characterList;
 
     public DatabaseStub(String dbName) {
         this.dbName = dbName;
@@ -137,32 +137,32 @@ public class DatabaseStub {
         }
     }
 
-    public void getPCList(ArrayList<PC> pc) {
-        if(pc != null) {
-            pc.clear();
-            pc.addAll(characterList);
+    public void getPCList(ArrayList<PlayerCharacter> playerCharacter) {
+        if(playerCharacter != null) {
+            playerCharacter.clear();
+            playerCharacter.addAll(characterList);
         }
     }
 
-    public void insertPC(PC currPC) {
-        if(currPC != null) {
-            characterList.add(currPC);
+    public void insertPC(PlayerCharacter currPlayerCharacter) {
+        if(currPlayerCharacter != null) {
+            characterList.add(currPlayerCharacter);
         }
     }
 
-    public void updatePC(PC currPC) {
-        if(currPC != null) {
-            int index = characterList.indexOf(currPC);
+    public void updatePC(PlayerCharacter currPlayerCharacter) {
+        if(currPlayerCharacter != null) {
+            int index = characterList.indexOf(currPlayerCharacter);
 
             if(index >= 0) {
-                characterList.set(index, currPC);
+                characterList.set(index, currPlayerCharacter);
             }
         }
     }
 
-    public void deletePC(PC currPC) {
-        if(currPC != null) {
-            int index = characterList.indexOf(currPC);
+    public void deletePC(PlayerCharacter currPlayerCharacter) {
+        if(currPlayerCharacter != null) {
+            int index = characterList.indexOf(currPlayerCharacter);
 
             if(index >= 0) {
                 characterList.remove(index);
@@ -174,10 +174,12 @@ public class DatabaseStub {
         ArrayList<String> subOptions = new ArrayList<>(Arrays.asList("Limb basic"));
         BodyType human = new BodyType("Human", 0, "Standard", subOptions, true);
         bodyOptions.add(human);
-        subOptions.add(0, "Beserker");
-        BodyType mutant = new BodyType("Mutant", 3, "Weird thing", subOptions, true);
+        ArrayList<String> subOptions2 = new ArrayList<>();
+        subOptions2.add("Limb basic");
+        subOptions2.add(0, "Beserker");
+        BodyType mutant = new BodyType("Mutant", 3, "Weird thing", subOptions2, true);
         bodyOptions.add(mutant);
-        BodyType limb_basic = new BodyType("Limb basic", 1, "limb cool", true, false);
+        BodyType limb_basic = new BodyType("Limb basic", 2, "limb cool", 4, false);
         bodyOptions.add(limb_basic);
         BodyType beserker = new BodyType("Beserker", -1, "Even weirder thing", false);
         bodyOptions.add(beserker);
@@ -209,7 +211,7 @@ public class DatabaseStub {
         skillList.add(skillOptions.get(1));
         skillList.add(skillOptions.get(2));
         BodyType bType = (BodyType)bodyOptions.get(0);
-        PC bobbert = new PC("Bobbert", bType, skillList);
+        PlayerCharacter bobbert = new PlayerCharacter("Bobbert", bType, skillList);
         characterList.add(bobbert);
     }
 }

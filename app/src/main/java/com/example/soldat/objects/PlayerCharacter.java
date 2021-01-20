@@ -7,7 +7,7 @@ import com.example.soldat.objects.Aspects.Skill;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PC implements Serializable {
+public class PlayerCharacter implements Serializable {
 
     private static int NEXT_ID = 1;
     private final int creationPoints = 25;
@@ -16,23 +16,29 @@ public class PC implements Serializable {
     private int userId;
     private String characterName;
     private BodyType body;
-    private ArrayList<Aspects> SkillList;
+    private ArrayList<Aspects> bodyAugments;
+    private ArrayList<Aspects> skillList;
 
 
-    public PC(String userName, BodyType body, ArrayList<Aspects> skillList) {
+    public PlayerCharacter(String userName, BodyType body, ArrayList<Aspects> skillList) {
         this.characterName = userName;
         this.remainingCreationPoints = creationPoints;
         userId = NEXT_ID++;
         this.body = body;
-        this.SkillList = skillList;
+        this.bodyAugments = new ArrayList<>();
+        this.skillList = skillList;
     }
-    public PC(String userName) {
+    public PlayerCharacter(String userName) {
         this.characterName = userName;
         this.remainingCreationPoints = creationPoints;
+        this.bodyAugments = new ArrayList<>();
+        this.skillList = new ArrayList<>();
         userId = NEXT_ID++;
     }
-    public PC() {
+    public PlayerCharacter() {
         this.remainingCreationPoints = creationPoints;
+        this.bodyAugments = new ArrayList<>();
+        this.skillList = new ArrayList<>();
         userId = NEXT_ID++;
     }
 
@@ -45,7 +51,7 @@ public class PC implements Serializable {
     }
 
     public void changeRemainingCreationPoints(int remainingCreationPoints) {
-        this.remainingCreationPoints += remainingCreationPoints;
+        this.remainingCreationPoints -= remainingCreationPoints;
     }
 
     public int getUserId() {
@@ -73,10 +79,28 @@ public class PC implements Serializable {
     }
 
     public ArrayList<Aspects> getSkillList() {
-        return SkillList;
+        return skillList;
     }
 
     public void addSkill(Skill newSkill) {
-        SkillList.add(newSkill);
+        skillList.add(newSkill);
+    }
+
+    public void removeSkill(Skill newSkill) {
+        skillList.remove(newSkill);
+    }
+
+    public ArrayList<Aspects> getBodyAugments() {
+        return bodyAugments;
+    }
+
+    public void addBodyAugments(BodyType bodyAugments) {
+        this.bodyAugments.add(bodyAugments);
+    }
+
+    public void clearBodyAugments() { this.bodyAugments.clear(); }
+
+    public void removeBodyAugments(BodyType bodyAugments) {
+        this.bodyAugments.remove(bodyAugments);
     }
 }
