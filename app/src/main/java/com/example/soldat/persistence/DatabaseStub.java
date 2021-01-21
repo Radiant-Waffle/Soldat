@@ -183,6 +183,8 @@ public class DatabaseStub {
         bodyOptions.add(limb_basic);
         BodyType beserker = new BodyType("Beserker", -1, "Even weirder thing", false);
         bodyOptions.add(beserker);
+        BodyType robot = new BodyType("Robot", 5, "Beep boop", true);
+        bodyOptions.add(robot);
     }
 
     private void initializeSkills() {
@@ -197,13 +199,29 @@ public class DatabaseStub {
     private void initializeMods() {
         ArrayList<Integer> cost = new ArrayList<>(Arrays.asList(1));
         Modification acuteBalance = new Modification("Acute Balance", cost, "stay upright", modificationType.PHYSICAL_BENEFITS);
-        cost = new ArrayList<>(Arrays.asList(-3));
+        cost = new ArrayList<>(Arrays.asList(3));
         Modification mute = new Modification("Mute", cost, "...", modificationType.PHYSICAL_DETRIMENTS);
         cost = new ArrayList<>(Arrays.asList(2, 3, 4, 5, 6, 7));
-        Modification alternateIdentity  = new Modification("Alternate Identity", cost, "Whit a minute, who are you?", modificationType.SOCIAL_BENEFITS);
+        Modification alternateIdentity  = new Modification("Alternate Identity", cost, "Whit a minute, who are you?", modificationType.SOCIAL_BENEFITS, "Mistaken Identity");
+        Modification mistakenIdentity  = new Modification("Mistaken Identity", cost, "Whit a minute, aren't you that guy?", modificationType.SOCIAL_DETRIMENTS, "Alternate Identity");
+        cost = new ArrayList<>(Arrays.asList(3));
+        ArrayList<String> restrictions = new ArrayList<>(Arrays.asList("Robot"));
+        Modification adeptMind  = new Modification("Adept Mind", cost, "Big Brain", modificationType.MENTAL_BENEFITS, restrictions);
+        cost = new ArrayList<>(Arrays.asList(1, 2, 3));
+        Modification phobia  = new Modification("Phobia", cost, "AHHHHHHHH!!!", modificationType.MENTAL_DETRIMENTS);
+        cost = new ArrayList<>(Arrays.asList(4));
+        restrictions = new ArrayList<>(Arrays.asList("Human, Mutant, Cyborg"));
+        Modification advancedOS  = new Modification("Advanced OS", cost, "Reloading from previous save", modificationType.TECHNOLOGICAL_BENEFITS, restrictions);
+        cost = new ArrayList<>(Arrays.asList(1));
+        Modification glitch  = new Modification("Glitch", cost, "ERROR! ERROR!", modificationType.TECHNOLOGICAL_DETRIMENTS, restrictions);
         modOptions.add(acuteBalance);
         modOptions.add(mute);
         modOptions.add(alternateIdentity);
+        modOptions.add(mistakenIdentity);
+        modOptions.add(adeptMind);
+        modOptions.add(phobia);
+        modOptions.add(advancedOS);
+        modOptions.add(glitch);
     }
 
     private void initializeCharacters() {

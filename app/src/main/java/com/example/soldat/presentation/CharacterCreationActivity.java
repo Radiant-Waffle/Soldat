@@ -1,15 +1,13 @@
 package com.example.soldat.presentation;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,18 +24,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.soldat.R;
 import com.example.soldat.business.AccessBodyType;
+import com.example.soldat.business.AccessModifications;
 import com.example.soldat.business.AccessSkill;
 import com.example.soldat.enums.buildStage;
+import com.example.soldat.enums.modificationType;
 import com.example.soldat.objects.Aspects.Aspects;
 import com.example.soldat.objects.Aspects.BodyType;
 import com.example.soldat.objects.Aspects.Skill;
 import com.example.soldat.objects.PlayerCharacter;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class CharacterCreationActivity extends AppCompatActivity {
     private PlayerCharacter currCharacter;
@@ -245,13 +242,18 @@ public class CharacterCreationActivity extends AppCompatActivity {
         if(curr.getMultiple() == 1) {
             costView.setText(cost);
         } else {
-            newRow.removeView(costView);
+            ViewGroup parent = (ViewGroup) costView.getParent();
+            int index = parent.indexOfChild(costView);
+            parent.removeView(costView);
             final List<Integer> values = new ArrayList<>();
             for(int i = 1; i <= curr.getMultiple(); i++) { values.add(i * baseCost); }
-            ArrayAdapter<Integer> val = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, values);
+            ArrayAdapter<Integer> val = new ArrayAdapter<Integer>(this, R.layout.spinner_item, values);
             val.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            amount.setBackgroundResource(R.drawable.spinner_shape);
+            amount.setPopupBackgroundResource(R.drawable.spinner_shape);
             amount.setAdapter(val);
             if(curr.getMultipleSelected() != 1) { amount.setSelection(curr.getMultipleSelected() / baseCost - 1); }
+            else { amount.setSelection(0); }
             amount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -268,8 +270,12 @@ public class CharacterCreationActivity extends AppCompatActivity {
 
                 }
             });
-            amount.setBackgroundResource(R.drawable.spinner_shape);
-            newRow.addView(amount, 2);
+            TableRow.LayoutParams spinLP = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                    TableRow.LayoutParams.MATCH_PARENT, 1.5f);
+            spinLP.setMarginEnd(10);
+            spinLP.gravity = Gravity.START;
+            amount.setLayoutParams(spinLP);
+            newRow.addView(amount, index);
         }
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,13 +294,12 @@ public class CharacterCreationActivity extends AppCompatActivity {
                 if(checkView.isChecked()) {
                     currCharacter.addBodyAugments(curr);
                     currCharacter.changeRemainingCreationPoints(currCost);
-                    updatePoints();
                 }
                 else {
                     currCharacter.removeBodyAugments(curr);
                     currCharacter.changeRemainingCreationPoints(-currCost);
-                    updatePoints();
                 }
+                updatePoints();
             }
         });
         if(currCharacter.getBodyAugments().contains((Aspects)curr)) {
@@ -349,7 +354,34 @@ public class CharacterCreationActivity extends AppCompatActivity {
     }
 
     private void createModList() {
+        AccessModifications modTransport = new AccessModifications();
+        modTransport.getModOptions(currOptions, modificationType.PHYSICAL_BENEFITS);
+        createField(true);
+        modTransport.getModOptions(currOptions, modificationType.PHYSICAL_DETRIMENTS);
+        createField(false);
+        modTransport.getModOptions(currOptions, modificationType.SOCIAL_BENEFITS);
+        createField(true);
+        modTransport.getModOptions(currOptions, modificationType.SOCIAL_DETRIMENTS);
+        createField(false);
+        modTransport.getModOptions(currOptions, modificationType.MENTAL_BENEFITS);
+        createField(true);
+        modTransport.getModOptions(currOptions, modificationType.MENTAL_DETRIMENTS);
+        createField(false);
+        modTransport.getModOptions(currOptions, modificationType.TECHNOLOGICAL_BENEFITS);
+        createField(true);
+        modTransport.getModOptions(currOptions, modificationType.TECHNOLOGICAL_DETRIMENTS);
+        createField(false);
+    }
 
+    private void createField(Boolean benefit) {
+        final TableRow newRow = (TableRow) getLayoutInflater().inflate(R.layout.modification_row,null);
+        final LinearLayout rowView = newRow.findViewById(R.id.mod_row_view);
+        for(Aspects a : currOptions) {
+            Skill currMod = (Skill)a;
+            String name = currMod.getName();
+            String cost = "" + currMod.getCost();
+            String desc = currMod.getDescription();
+        }
     }
 
     private void aspectDescription(String title, String text) {
