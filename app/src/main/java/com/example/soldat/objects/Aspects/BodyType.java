@@ -7,7 +7,7 @@ public class BodyType extends Aspects {
     boolean primary;
     int multiple = 1;
     int multipleSelected = 1;
-    ArrayList<String> subOptions;
+    ArrayList<String> subOptions = new ArrayList<>();
 
     public BodyType(String name, int cost, String description) {
         super(name, description);

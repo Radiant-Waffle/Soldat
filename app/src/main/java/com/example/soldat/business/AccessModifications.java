@@ -16,10 +16,12 @@ public class AccessModifications {
         db.getModOptions(mods);
     }
     public void getModOptions(ArrayList<Aspects> mods, modificationType type) {
-        db.getModOptions(mods);
-        for(Aspects m : mods) {
-            if(((Modification)m).getType() != type) {
-                mods.remove(m);
+        ArrayList<Aspects> retrieve = new ArrayList<>();
+        db.getModOptions(retrieve);
+        mods.clear();
+        for(Aspects m : retrieve) {
+            if(((Modification)m).getType() == type) {
+                mods.add(m);
             }
         }
     }

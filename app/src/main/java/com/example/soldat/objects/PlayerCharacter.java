@@ -2,6 +2,7 @@ package com.example.soldat.objects;
 
 import com.example.soldat.objects.Aspects.Aspects;
 import com.example.soldat.objects.Aspects.BodyType;
+import com.example.soldat.objects.Aspects.Modification;
 import com.example.soldat.objects.Aspects.Skill;
 
 import java.io.Serializable;
@@ -18,6 +19,7 @@ public class PlayerCharacter implements Serializable {
     private BodyType body;
     private ArrayList<Aspects> bodyAugments;
     private ArrayList<Aspects> skillList;
+    private ArrayList<Aspects> modList;
 
 
     public PlayerCharacter(String userName, BodyType body, ArrayList<Aspects> skillList) {
@@ -27,18 +29,21 @@ public class PlayerCharacter implements Serializable {
         this.body = body;
         this.bodyAugments = new ArrayList<>();
         this.skillList = skillList;
+        this.modList = new ArrayList<>();
     }
     public PlayerCharacter(String userName) {
         this.characterName = userName;
         this.remainingCreationPoints = creationPoints;
         this.bodyAugments = new ArrayList<>();
         this.skillList = new ArrayList<>();
+        this.modList = new ArrayList<>();
         userId = NEXT_ID++;
     }
     public PlayerCharacter() {
         this.remainingCreationPoints = creationPoints;
         this.bodyAugments = new ArrayList<>();
         this.skillList = new ArrayList<>();
+        this.modList = new ArrayList<>();
         userId = NEXT_ID++;
     }
 
@@ -102,5 +107,17 @@ public class PlayerCharacter implements Serializable {
 
     public void removeBodyAugments(BodyType bodyAugments) {
         this.bodyAugments.remove(bodyAugments);
+    }
+
+    public ArrayList<Aspects> getModList() {
+        return modList;
+    }
+
+    public void addMod(Modification newMod) {
+        modList.add(newMod);
+    }
+
+    public void removeMod(Modification newSkill) {
+        modList.remove(newSkill);
     }
 }

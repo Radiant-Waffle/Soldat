@@ -20,7 +20,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.soldat.R;
 import com.example.soldat.business.AccessBodyType;
@@ -30,6 +32,7 @@ import com.example.soldat.enums.buildStage;
 import com.example.soldat.enums.modificationType;
 import com.example.soldat.objects.Aspects.Aspects;
 import com.example.soldat.objects.Aspects.BodyType;
+import com.example.soldat.objects.Aspects.Modification;
 import com.example.soldat.objects.Aspects.Skill;
 import com.example.soldat.objects.PlayerCharacter;
 
@@ -92,8 +95,20 @@ public class CharacterCreationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch(currStage) {
                     case BODY:
-                        currCharacter = null;
-                        openMainActivity();
+                        new AlertDialog.Builder(CharacterCreationActivity.this)
+                            .setTitle("Warning: All current progress will be lost")
+                            .setMessage("Are you sure you want to continue?")
+                        // Set up the buttons
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    currCharacter = null;
+                                    openMainActivity();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
                         break;
                     case SKILL:
                         currStage = buildStage.BODY;
@@ -199,11 +214,13 @@ public class CharacterCreationActivity extends AppCompatActivity {
     private void openSubList(BodyType bType) {
         ArrayList<String> subTypes = bType.getSubOptions();
         ArrayList<BodyType> subOptions = new ArrayList<>();
-        for(Aspects a : currOptions) {
-            BodyType currType = (BodyType)a;
-            String typeName = currType.getName();
-            if(subTypes.contains(typeName)) {
-                subOptions.add(currType);
+        if(!subTypes.isEmpty()) {
+            for (Aspects a : currOptions) {
+                BodyType currType = (BodyType) a;
+                String typeName = currType.getName();
+                if (subTypes.contains(typeName)) {
+                    subOptions.add(currType);
+                }
             }
         }
         if(!subOptions.isEmpty()) {
@@ -242,26 +259,27 @@ public class CharacterCreationActivity extends AppCompatActivity {
         if(curr.getMultiple() == 1) {
             costView.setText(cost);
         } else {
+            cost = cost + "X ";
             ViewGroup parent = (ViewGroup) costView.getParent();
             int index = parent.indexOfChild(costView);
-            parent.removeView(costView);
+            costView.setText(cost);
             final List<Integer> values = new ArrayList<>();
-            for(int i = 1; i <= curr.getMultiple(); i++) { values.add(i * baseCost); }
+            for(int i = 1; i <= curr.getMultiple(); i++) { values.add(i); }
             ArrayAdapter<Integer> val = new ArrayAdapter<Integer>(this, R.layout.spinner_item, values);
             val.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             amount.setBackgroundResource(R.drawable.spinner_shape);
             amount.setPopupBackgroundResource(R.drawable.spinner_shape);
             amount.setAdapter(val);
-            if(curr.getMultipleSelected() != 1) { amount.setSelection(curr.getMultipleSelected() / baseCost - 1); }
+            if(curr.getMultipleSelected() != 1) { amount.setSelection(curr.getMultipleSelected() - 1); }
             else { amount.setSelection(0); }
             amount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     if(checkView.isChecked()) {
-                        currCharacter.changeRemainingCreationPoints(-curr.getMultipleSelected());
+                        currCharacter.changeRemainingCreationPoints(-curr.getMultipleSelected()*baseCost);
                         int currCost = (int) amount.getSelectedItem();
                         curr.setMultipleSelected(currCost);
-                        currCharacter.changeRemainingCreationPoints(currCost);
+                        currCharacter.changeRemainingCreationPoints(currCost*baseCost);
                         updatePoints();
                     }
                 }
@@ -271,36 +289,28 @@ public class CharacterCreationActivity extends AppCompatActivity {
                 }
             });
             TableRow.LayoutParams spinLP = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
-                    TableRow.LayoutParams.MATCH_PARENT, 1.5f);
+                    TableRow.LayoutParams.MATCH_PARENT, 1f);
             spinLP.setMarginEnd(10);
             spinLP.gravity = Gravity.START;
             amount.setLayoutParams(spinLP);
-            newRow.addView(amount, index);
+            newRow.addView(amount, index + 1);
         }
-        infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                aspectDescription(name, desc);
+        infoButton.setOnClickListener(view -> aspectDescription(name, desc));
+        checkView.setOnClickListener(view -> {
+            int currCost = baseCost;
+            if(curr.getMultiple() != 1) {
+                currCost = (int)amount.getSelectedItem();
+                curr.setMultipleSelected(currCost);
             }
-        });
-        checkView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int currCost = baseCost;
-                if(curr.getMultiple() != 1) {
-                    currCost = (int)amount.getSelectedItem();
-                    curr.setMultipleSelected(currCost);
-                }
-                if(checkView.isChecked()) {
-                    currCharacter.addBodyAugments(curr);
-                    currCharacter.changeRemainingCreationPoints(currCost);
-                }
-                else {
-                    currCharacter.removeBodyAugments(curr);
-                    currCharacter.changeRemainingCreationPoints(-currCost);
-                }
-                updatePoints();
+            if(checkView.isChecked()) {
+                currCharacter.addBodyAugments(curr);
+                currCharacter.changeRemainingCreationPoints(currCost);
             }
+            else {
+                currCharacter.removeBodyAugments(curr);
+                currCharacter.changeRemainingCreationPoints(-currCost);
+            }
+            updatePoints();
         });
         if(currCharacter.getBodyAugments().contains((Aspects)curr)) {
             checkView.setChecked(true);
@@ -325,28 +335,20 @@ public class CharacterCreationActivity extends AppCompatActivity {
             final ImageButton infoButton = newRow.findViewById(R.id.aspect_info);
             nameView.setText(name);
             costView.setText(cost);
-            infoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aspectDescription(name, desc);
+            infoButton.setOnClickListener(view -> aspectDescription(name, desc));
+            newRow.setOnClickListener(view -> {
+                if(newRow.isSelected()) {
+                    currCharacter.removeSkill(currSkill);
+                    newRow.setSelected(false);
+                    int refund = -currSkill.getCost();
+                    currCharacter.changeRemainingCreationPoints(refund);
+                } else {
+                    currCharacter.addSkill(currSkill);
+                    newRow.setSelected(true);
+                    int refund = currSkill.getCost();
+                    currCharacter.changeRemainingCreationPoints(refund);
                 }
-            });
-            newRow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(newRow.isSelected()) {
-                        currCharacter.removeSkill(currSkill);
-                        newRow.setSelected(false);
-                        int refund = -currSkill.getCost();
-                        currCharacter.changeRemainingCreationPoints(refund);
-                    } else {
-                        currCharacter.addSkill(currSkill);
-                        newRow.setSelected(true);
-                        int refund = currSkill.getCost();
-                        currCharacter.changeRemainingCreationPoints(refund);
-                    }
-                    updatePoints();
-                }
+                updatePoints();
             });
             if(currCharacter.getSkillList().contains((Aspects)currSkill)) { newRow.setSelected(true); }
             aspectTable.addView(newRow, lp);
@@ -377,11 +379,67 @@ public class CharacterCreationActivity extends AppCompatActivity {
         final TableRow newRow = (TableRow) getLayoutInflater().inflate(R.layout.modification_row,null);
         final LinearLayout rowView = newRow.findViewById(R.id.mod_row_view);
         for(Aspects a : currOptions) {
-            Skill currMod = (Skill)a;
+            int currCost = 0;
+            Modification currMod = (Modification) a;
             String name = currMod.getName();
-            String cost = "" + currMod.getCost();
+            ArrayList<Integer> cost = currMod.getCost();
             String desc = currMod.getDescription();
+            final ConstraintLayout modBlock = (ConstraintLayout) getLayoutInflater().inflate(R.layout.modification_block, null);
+            final TextView nameView = modBlock.findViewById(R.id.mod_title);
+            final TextView costView = modBlock.findViewById(R.id.mod_cost);
+            final LinearLayout indicatorView = modBlock.findViewById(R.id.mod_indicator);
+            nameView.setText(name);
+            String costText = "" + cost.get(currCost);
+            ArrayList<Aspects> charModList = currCharacter.getModList();
+            if(charModList.contains(a)) {
+                Modification modInChar = (Modification)charModList.get(charModList.indexOf(a));
+                if(modInChar.getLevelSelected() != cost.size()) {
+                    currCost = cost.get(modInChar.getLevelSelected());
+                    costText = "" + cost.get(currCost);
+                } else {
+                    costText = "Max";
+                }
+            }
+            costView.setText(costText);
+            ArrayList<View> boxes = new ArrayList<>();
+            for(int x = 0; x < cost.size(); x++) {
+                View box = new View(this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.height = 30;
+                lp.width = 30;
+                lp.gravity = Gravity.CENTER;
+                lp.setMargins(4, 4, 4, 4);
+                box.setLayoutParams(lp);
+                box.setBackgroundResource(R.drawable.skill_level_selector);
+                box.setActivated(x < currCost);
+                indicatorView.addView(box);
+                boxes.add(box);
+            }
+            modBlock.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    aspectDescription(name, desc);
+                    return true;
+                }
+            });
+            modBlock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int currentCostSelected;
+
+                }
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            lp.height = 240;
+            lp.width = 360;
+            lp.setMargins(10,10,10,10);
+            modBlock.setLayoutParams(lp);
+            rowView.addView(modBlock, lp);
+
         }
+        aspectTable.addView(newRow);
     }
 
     private void aspectDescription(String title, String text) {

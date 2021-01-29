@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class Modification extends Aspects {
     modificationType type;
     ArrayList<Integer> cost;
-    ArrayList<String> typeRestrictions;
+    int levelSelected = 1;
+    ArrayList<String> typeRestrictions = new ArrayList<>();
     String opposite;
     public Modification(String name, ArrayList<Integer> cost, String description, modificationType type, ArrayList<String> typeRestrictions, String opposite) {
         super(name, description);
@@ -75,5 +76,13 @@ public class Modification extends Aspects {
 
     public void setOpposite(String opposite) {
         this.opposite = opposite;
+    }
+
+    public int getLevelSelected() {
+        return levelSelected;
+    }
+
+    public void setLevelSelected(int levelSelected) {
+        this.levelSelected = levelSelected;
     }
 }

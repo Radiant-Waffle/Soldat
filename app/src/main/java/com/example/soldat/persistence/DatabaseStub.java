@@ -179,7 +179,7 @@ public class DatabaseStub {
         subOptions2.add(0, "Beserker");
         BodyType mutant = new BodyType("Mutant", 3, "Weird thing", subOptions2, true);
         bodyOptions.add(mutant);
-        BodyType limb_basic = new BodyType("Limb basic", 2, "limb cool", 4, false);
+        BodyType limb_basic = new BodyType("Limb basic", 1, "limb cool", 4, false);
         bodyOptions.add(limb_basic);
         BodyType beserker = new BodyType("Beserker", -1, "Even weirder thing", false);
         bodyOptions.add(beserker);
