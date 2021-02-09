@@ -10,14 +10,14 @@
         android:id="@+id/mod_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeMinTextSize="16sp"
         android:fontFamily="@font/geo"
         android:textColor="@color/primaryTextColor"
-        android:autoSizeMinTextSize="16sp"
-        android:autoSizeMaxTextSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/mod_cost"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/mod_cost"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/mod_cost"
@@ -41,5 +41,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mod_cost"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/mod_cost"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -84,7 +84,7 @@ public class CharacterCreationActivity extends AppCompatActivity {
 
     private void updatePoints() {
         TextView currentPoints = findViewById(R.id.remaining_Points);
-        String currentPointCount = "Remaining points:\n" + currCharacter.getRemainingCreationPoints();
+        String currentPointCount = "Remaining\npoints:" + currCharacter.getRemainingCreationPoints();
         currentPoints.setText(currentPointCount);
     }
 
