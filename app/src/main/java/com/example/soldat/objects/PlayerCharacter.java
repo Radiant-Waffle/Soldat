@@ -1,5 +1,6 @@
 package com.example.soldat.objects;
 
+import com.example.soldat.enums.modificationType;
 import com.example.soldat.objects.Aspects.Aspects;
 import com.example.soldat.objects.Aspects.BodyType;
 import com.example.soldat.objects.Aspects.Modification;
@@ -111,6 +112,16 @@ public class PlayerCharacter implements Serializable {
 
     public ArrayList<Aspects> getModList() {
         return modList;
+    }
+    public ArrayList<Aspects> getModList(modificationType type) {
+        ArrayList<Aspects> retrieve = getModList();
+        ArrayList<Aspects> mods = new ArrayList<>();
+        for(Aspects m : retrieve) {
+            if(((Modification)m).getType() == type) {
+                mods.add(m);
+            }
+        }
+        return mods;
     }
 
     public void addMod(Modification newMod) {

@@ -2,6 +2,7 @@ package com.example.soldat.presentation;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soldat.R;
 import com.example.soldat.business.AccessBodyType;
@@ -36,6 +40,7 @@ import com.example.soldat.objects.Aspects.Modification;
 import com.example.soldat.objects.Aspects.Skill;
 import com.example.soldat.objects.PlayerCharacter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +49,7 @@ public class CharacterCreationActivity extends AppCompatActivity {
     private buildStage currStage;
     private ArrayList<Aspects> currOptions;
     private TableLayout aspectTable;
+    private ExpandableListView modTable;
     private ArrayList<TableRow> selectedRow;
 
 
@@ -56,6 +62,7 @@ public class CharacterCreationActivity extends AppCompatActivity {
         currStage = buildStage.BODY;
         currOptions = new ArrayList<>();
         aspectTable = findViewById(R.id.aspect_table);
+        modTable = findViewById(R.id.mod_table);
         selectedRow = new ArrayList<>();
         updatePoints();
         setupNavOptions();
@@ -238,6 +245,7 @@ public class CharacterCreationActivity extends AppCompatActivity {
 
     private void clearOptionsList() {
         aspectTable.removeAllViews();
+        modTable.removeAllViews();
     }
 
     private void buildSubOption(TableLayout optionLayout, BodyType curr) {
@@ -356,7 +364,11 @@ public class CharacterCreationActivity extends AppCompatActivity {
     }
 
     private void createModList() {
-        AccessModifications modTransport = new AccessModifications();
+        for(modificationType type : modificationType.values()) {
+            currOptions = currCharacter.getModList(type);
+            createUserModList(type);
+        }
+        /*AccessModifications modTransport = new AccessModifications();
         modTransport.getModOptions(currOptions, modificationType.PHYSICAL_BENEFITS);
         createField(true);
         modTransport.getModOptions(currOptions, modificationType.PHYSICAL_DETRIMENTS);
@@ -372,12 +384,135 @@ public class CharacterCreationActivity extends AppCompatActivity {
         modTransport.getModOptions(currOptions, modificationType.TECHNOLOGICAL_BENEFITS);
         createField(true);
         modTransport.getModOptions(currOptions, modificationType.TECHNOLOGICAL_DETRIMENTS);
-        createField(false);
+        createField(false);*/
     }
 
-    private void createField(Boolean benefit) {
-        final TableRow newRow = (TableRow) getLayoutInflater().inflate(R.layout.modification_row,null);
-        final LinearLayout rowView = newRow.findViewById(R.id.mod_row_view);
+    private void createUserModList(modificationType type) {
+        String title = "";
+        switch(type) {
+            case PHYSICAL_BENEFITS:
+                title = "Physical Benefits";
+                break;
+            case PHYSICAL_DETRIMENTS:
+                title = "Physical Detriments";
+                break;
+            case SOCIAL_BENEFITS:
+                title = "Social Benefits";
+                break;
+            case SOCIAL_DETRIMENTS:
+                title = "Social Detriments";
+                break;
+            case MENTAL_BENEFITS:
+                title = "Mental Benefits";
+                break;
+            case MENTAL_DETRIMENTS:
+                title = "Mental Detriments";
+                break;
+            case TECHNOLOGICAL_BENEFITS:
+                title = "Technological Benefits";
+                break;
+            case TECHNOLOGICAL_DETRIMENTS:
+                title = "Technological Detriments";
+                break;
+        }
+        for(Aspects a : currOptions) {
+            Modification currMod = (Modification) a;
+            String name = currMod.getName();
+            int currCost = currMod.getLevelSelected();
+            String cost = "" + currMod.getCost().get(currCost);
+            String desc = currMod.getDescription();
+            final ConstraintLayout newRow = (ConstraintLayout) getLayoutInflater().inflate(R.layout.modification_block,null);
+            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            lp.height = 120;
+            lp.setMargins(10,10,10,10);
+            newRow.setLayoutParams(lp);
+            final TextView nameView = newRow.findViewById(R.id.mod_title);
+            final TextView costView = newRow.findViewById(R.id.mod_cost);
+            final ImageButton infoButton = newRow.findViewById(R.id.mod_info);
+            final ImageButton deleteButton = newRow.findViewById(R.id.delete_Button);
+            final LinearLayout boxView = newRow.findViewById(R.id.mod_indicator);
+            nameView.setText(name);
+            costView.setText(cost);
+            infoButton.setOnClickListener(view -> aspectDescription(name, desc));
+            ArrayList<Integer> costList = currMod.getCost();
+            if(costList.size() > 1) {
+                ArrayList<View> boxes = makeBoxes(costList.size(), currMod.getLevelSelected());
+                for(View box : boxes) {
+                    boxView.addView(box);
+                }
+                newRow.setOnClickListener(view -> {
+                    int costValue = currMod.getCost().get(currCost);
+                    currCharacter.changeRemainingCreationPoints(-costValue);
+                    int newCost = costSlider(costList, currCost);
+                    costValue = currMod.getCost().get(newCost);
+                    costView.setText(costValue);
+                    currMod.setLevelSelected(newCost);
+                    currCharacter.changeRemainingCreationPoints(costValue);
+                    updatePoints();
+                });
+            }
+            deleteButton.setOnClickListener(view -> {
+                int costValue = currMod.getCost().get(currCost);
+                currCharacter.removeMod(currMod);
+                modTable.removeView(newRow);
+            });
+        }
+    }
+
+    private ArrayList<View> makeBoxes(int size, int level) {
+        ArrayList<View> boxes = new ArrayList<>();
+        for(int x = 0; x < size; x++) {
+            View box = new View(this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.height = 30;
+            lp.width = 30;
+            lp.gravity = Gravity.CENTER;
+            lp.setMargins(4, 4, 4, 4);
+            box.setLayoutParams(lp);
+            box.setBackgroundResource(R.drawable.skill_level_selector);
+            box.setActivated(x < level);
+            boxes.add(box);
+        }
+        return boxes;
+    }
+
+    private int costSlider(ArrayList<Integer> costList, int currCost) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(CharacterCreationActivity.this);
+        View view = getLayoutInflater().inflate( R.layout.slider_dialog, null);
+        builder.setView(view);
+        LinearLayout costView = view.findViewById(R.id.seekLabel);
+        for(int labelCost : costList) {
+            TextView label = new TextView(this);
+            label.setText(labelCost);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.weight = 1;
+            lp.width = 0;
+            label.setLayoutParams(lp);
+            label.setTextColor(Color.WHITE);
+            costView.addView(label, lp);
+        }
+        SeekBar seek = view.findViewById(R.id.seekBar);
+        seek.setMax(costList.size() - 1);
+        seek.setProgress(currCost);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+        return seek.getProgress();
+    }
+
+    /*private void createField(Boolean benefit) {
+        final TableRow newRow = (TableRow) getLayoutInflater().inflate(R.layout.modification_table,null);
+        final RecyclerView rowView = newRow.findViewById(R.id.mod_row_view);
         for(Aspects a : currOptions) {
             int currCost = 0;
             Modification currMod = (Modification) a;
@@ -440,7 +575,7 @@ public class CharacterCreationActivity extends AppCompatActivity {
 
         }
         aspectTable.addView(newRow);
-    }
+    }*/
 
     private void aspectDescription(String title, String text) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(CharacterCreationActivity.this);
@@ -464,16 +599,22 @@ public class CharacterCreationActivity extends AppCompatActivity {
                 stage.setText("Body Type");
                 AccessBodyType bodyTransport = new AccessBodyType();
                 bodyTransport.getBodyOptions(currOptions);
+                aspectTable.setVisibility(View.VISIBLE);
+                modTable.setVisibility(View.GONE);
                 createBodyList();
                 break;
             case SKILL:
                 stage.setText("Skill options");
                 AccessSkill skillTransport = new AccessSkill();
                 skillTransport.getSkillOptions(currOptions);
+                aspectTable.setVisibility(View.VISIBLE);
+                modTable.setVisibility(View.GONE);
                 createSkillList();
                 break;
             case MOD:
                 stage.setText("Benefits & Detriments");
+                aspectTable.setVisibility(View.GONE);
+                modTable.setVisibility(View.VISIBLE);
                 createModList();
                 break;
         }
